@@ -28,6 +28,7 @@ CREATE TABLE `apply_info`  (
   `apply_book_time` datetime NOT NULL COMMENT '用户点击预约的时间',
   `apply_status` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '审核状态',
   `apply_reject_reason` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '驳回原因',
+  `user_cancel` smallint DEFAULT 0 COMMENT '用户是否取消，0为否，1为是',
   `user_account` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '预约用户账号',
   `sec_account` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '教秘账号',
   PRIMARY KEY (`apply_id`) USING BTREE,
@@ -42,10 +43,10 @@ CREATE TABLE `apply_info`  (
 -- ----------------------------
 -- Records of apply_info
 -- ----------------------------
-INSERT INTO `apply_info` VALUES ('AP001', 30, '课程研讨', '2024-09-01 09:30:00', '未审核', NULL, '2023001', 'sec_jsj');
-INSERT INTO `apply_info` VALUES ('AP002', 20, '社团活动', '2024-09-01 10:15:00', '已批准', NULL, '2023002', 'sec_wx');
-INSERT INTO `apply_info` VALUES ('AP003', 15, '讲座', '2024-09-01 14:00:00', '已拒绝', '场地冲突', '2023003', 'sec_sx');
-INSERT INTO `apply_info` VALUES ('AP004', 25, '考试', '2024-09-02 08:45:00', '未审核', NULL, '2023004', 'sec_jsj');
+INSERT INTO `apply_info` VALUES ('AP001', 30, '课程研讨', '2024-09-01 09:30:00', '未审核', NULL,0, '2023001', 'sec_jsj');
+INSERT INTO `apply_info` VALUES ('AP002', 20, '社团活动', '2024-09-01 10:15:00', '已批准', NULL,0, '2023002', 'sec_wx');
+INSERT INTO `apply_info` VALUES ('AP003', 15, '讲座', '2024-09-01 14:00:00', '已拒绝', '场地冲突',0, '2023003', 'sec_sx');
+INSERT INTO `apply_info` VALUES ('AP004', 25, '考试', '2024-09-02 08:45:00', '未审核', NULL,0,'2023004', 'sec_jsj');
 
 -- ----------------------------
 -- Table structure for building
