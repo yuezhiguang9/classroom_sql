@@ -11,7 +11,7 @@
  Target Server Version : 80026 (8.0.26)
  File Encoding         : 65001
 
- Date: 28/07/2025 15:56:21
+ Date: 31/07/2025 14:59:26
 */
 
 SET NAMES utf8mb4;
@@ -28,9 +28,9 @@ CREATE TABLE `apply_info`  (
   `apply_book_time` datetime NOT NULL COMMENT '用户点击预约的时间',
   `apply_status` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '审核状态',
   `apply_reject_reason` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '驳回原因',
-  `user_cancel` smallint DEFAULT 0 COMMENT '用户是否取消，0为否，1为是',
   `user_account` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '预约用户账号',
   `sec_account` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '教秘账号',
+  `user_cancel` int NULL DEFAULT 0 COMMENT '用户是否取消',
   PRIMARY KEY (`apply_id`) USING BTREE,
   INDEX `user_account`(`user_account` ASC) USING BTREE,
   INDEX `sec_account`(`sec_account` ASC) USING BTREE,
@@ -38,15 +38,15 @@ CREATE TABLE `apply_info`  (
   CONSTRAINT `apply_info_ibfk_2` FOREIGN KEY (`sec_account`) REFERENCES `teach_secretary` (`sec_account`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `apply_info_chk_1` CHECK (`apply_status` in (_utf8mb4'未审核',_utf8mb4'已批准',_utf8mb4'已拒绝')),
   CONSTRAINT `chk_apply_status` CHECK (`apply_status` in (_utf8mb4'未审核',_utf8mb4'已批准',_utf8mb4'已拒绝'))
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of apply_info
 -- ----------------------------
-INSERT INTO `apply_info` VALUES ('AP001', 30, '课程研讨', '2024-09-01 09:30:00', '未审核', NULL,0, '2023001', 'sec_jsj');
-INSERT INTO `apply_info` VALUES ('AP002', 20, '社团活动', '2024-09-01 10:15:00', '已批准', NULL,0, '2023002', 'sec_wx');
-INSERT INTO `apply_info` VALUES ('AP003', 15, '讲座', '2024-09-01 14:00:00', '已拒绝', '场地冲突',0, '2023003', 'sec_sx');
-INSERT INTO `apply_info` VALUES ('AP004', 25, '考试', '2024-09-02 08:45:00', '未审核', NULL,0,'2023004', 'sec_jsj');
+INSERT INTO `apply_info` VALUES ('apply001', 50, '课程教学', '2025-07-30 09:15:22', '已批准', NULL, 'user001', 'sec001', 0);
+INSERT INTO `apply_info` VALUES ('apply002', 30, '学术讲座', '2025-07-30 10:30:45', '未审核', NULL, 'user002', 'sec002', 0);
+INSERT INTO `apply_info` VALUES ('apply003', 45, '社团活动', '2025-07-29 14:20:33', '已拒绝', '时间冲突', 'user003', 'sec003', 0);
+INSERT INTO `apply_info` VALUES ('apply004', 25, '小组讨论', '2025-07-31 08:45:11', '未审核', NULL, 'user004', 'sec001', 1);
 
 -- ----------------------------
 -- Table structure for building
@@ -56,14 +56,14 @@ CREATE TABLE `building`  (
   `building_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '楼id',
   `building_name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '楼名',
   PRIMARY KEY (`building_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of building
 -- ----------------------------
-INSERT INTO `building` VALUES ('B1', '第一教学楼');
-INSERT INTO `building` VALUES ('B2', '第二教学楼');
-INSERT INTO `building` VALUES ('B3', '第三实验楼');
+INSERT INTO `building` VALUES ('b001', '第一教学楼');
+INSERT INTO `building` VALUES ('b002', '第二教学楼');
+INSERT INTO `building` VALUES ('b003', '实验楼');
 
 -- ----------------------------
 -- Table structure for classroom
@@ -74,18 +74,22 @@ CREATE TABLE `classroom`  (
   `room_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '教室类型',
   `room_capacity` int NULL DEFAULT NULL COMMENT '容量',
   `building_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '楼id',
+  `college_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '所属学院',
   PRIMARY KEY (`room_num`) USING BTREE,
-  INDEX `building_id`(`building_id` ASC) USING BTREE,
-  CONSTRAINT `classroom_ibfk_1` FOREIGN KEY (`building_id`) REFERENCES `building` (`building_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+  INDEX `classroom_ibfk_2`(`college_id` ASC) USING BTREE,
+  INDEX `classroom_ibfk_1`(`building_id` ASC) USING BTREE,
+  CONSTRAINT `classroom_ibfk_1` FOREIGN KEY (`building_id`) REFERENCES `building` (`building_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `classroom_ibfk_2` FOREIGN KEY (`college_id`) REFERENCES `college` (`college_id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of classroom
 -- ----------------------------
-INSERT INTO `classroom` VALUES ('B1-101', '普通教室', 60, 'B1');
-INSERT INTO `classroom` VALUES ('B1-202', '多媒体教室', 40, 'B1');
-INSERT INTO `classroom` VALUES ('B2-301', '阶梯教室', 120, 'B2');
-INSERT INTO `classroom` VALUES ('B3-105', '实验室', 30, 'B3');
+INSERT INTO `classroom` VALUES ('b001-101', '多媒体教室', 120, 'b001', 'col001');
+INSERT INTO `classroom` VALUES ('b001-103', '智慧教室', 90, 'b001', NULL);
+INSERT INTO `classroom` VALUES ('b001-201', '普通教室', 80, 'b001', 'col001');
+INSERT INTO `classroom` VALUES ('b002-301', '实验室', 60, 'b002', 'col002');
+INSERT INTO `classroom` VALUES ('b003-102', '阶梯教室', 200, 'b003', 'col003');
 
 -- ----------------------------
 -- Table structure for classroom_manager
@@ -99,14 +103,14 @@ CREATE TABLE `classroom_manager`  (
   PRIMARY KEY (`mgr_account`) USING BTREE,
   INDEX `building_id`(`building_id` ASC) USING BTREE,
   CONSTRAINT `classroom_manager_ibfk_1` FOREIGN KEY (`building_id`) REFERENCES `building` (`building_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of classroom_manager
 -- ----------------------------
-INSERT INTO `classroom_manager` VALUES ('mgr_b1', 'mgr123', '13800138001', 'B1');
-INSERT INTO `classroom_manager` VALUES ('mgr_b2', 'mgr456', '13900139001', 'B2');
-INSERT INTO `classroom_manager` VALUES ('mgr_b3', 'mgr789', '13700137001', 'B3');
+INSERT INTO `classroom_manager` VALUES ('mgr001', 'mgrpass1', '13900139001', 'b001');
+INSERT INTO `classroom_manager` VALUES ('mgr002', 'mgrpass2', '13900139002', 'b002');
+INSERT INTO `classroom_manager` VALUES ('mgr003', 'mgrpass3', '13900139003', 'b003');
 
 -- ----------------------------
 -- Table structure for classroom_resource
@@ -127,99 +131,26 @@ CREATE TABLE `classroom_resource`  (
   CONSTRAINT `classroom_resource_ibfk_1` FOREIGN KEY (`room_num`) REFERENCES `classroom` (`room_num`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `classroom_resource_ibfk_2` FOREIGN KEY (`apply_info_id`) REFERENCES `apply_info` (`apply_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `chk_room_status` CHECK (`res_room_status` in (_utf8mb4'空闲',_utf8mb4'已预订'))
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of classroom_resource
 -- ----------------------------
-INSERT INTO `classroom_resource` VALUES ('RES601', '2024-09-02', '第3周', '星期一', '第一节', '已预订', 'B1-101', 'AP001');
-INSERT INTO `classroom_resource` VALUES ('RES602', '2024-09-02', '第3周', '星期一', '第二节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES603', '2024-09-02', '第3周', '星期一', '第三节', '已预订', 'B1-202', 'AP002');
-INSERT INTO `classroom_resource` VALUES ('RES604', '2024-09-02', '第3周', '星期一', '第四节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES605', '2024-09-02', '第3周', '星期一', '第五节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES606', '2024-09-02', '第3周', '星期一', '第六节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES607', '2024-09-02', '第3周', '星期一', '第七节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES608', '2024-09-02', '第3周', '星期一', '第八节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES609', '2024-09-03', '第3周', '星期二', '第一节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES610', '2024-09-03', '第3周', '星期二', '第二节', '已预订', 'B1-101', 'AP001');
-INSERT INTO `classroom_resource` VALUES ('RES611', '2024-09-03', '第3周', '星期二', '第三节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES612', '2024-09-03', '第3周', '星期二', '第四节', '已预订', 'B1-202', 'AP002');
-INSERT INTO `classroom_resource` VALUES ('RES613', '2024-09-03', '第3周', '星期二', '第五节', '已预订', 'B2-301', 'AP003');
-INSERT INTO `classroom_resource` VALUES ('RES614', '2024-09-03', '第3周', '星期二', '第六节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES615', '2024-09-03', '第3周', '星期二', '第七节', '已预订', 'B3-105', 'AP004');
-INSERT INTO `classroom_resource` VALUES ('RES616', '2024-09-03', '第3周', '星期二', '第八节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES617', '2024-09-04', '第3周', '星期三', '第一节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES618', '2024-09-04', '第3周', '星期三', '第二节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES619', '2024-09-04', '第3周', '星期三', '第三节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES620', '2024-09-04', '第3周', '星期三', '第四节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES621', '2024-09-04', '第3周', '星期三', '第五节', '已预订', 'B2-301', 'AP003');
-INSERT INTO `classroom_resource` VALUES ('RES622', '2024-09-04', '第3周', '星期三', '第六节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES623', '2024-09-04', '第3周', '星期三', '第七节', '已预订', 'B3-105', 'AP004');
-INSERT INTO `classroom_resource` VALUES ('RES624', '2024-09-04', '第3周', '星期三', '第八节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES625', '2024-09-05', '第3周', '星期四', '第一节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES626', '2024-09-05', '第3周', '星期四', '第二节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES627', '2024-09-05', '第3周', '星期四', '第三节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES628', '2024-09-05', '第3周', '星期四', '第四节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES629', '2024-09-05', '第3周', '星期四', '第五节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES630', '2024-09-05', '第3周', '星期四', '第六节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES631', '2024-09-05', '第3周', '星期四', '第七节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES632', '2024-09-05', '第3周', '星期四', '第八节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES633', '2024-09-06', '第3周', '星期五', '第一节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES634', '2024-09-06', '第3周', '星期五', '第二节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES635', '2024-09-06', '第3周', '星期五', '第三节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES636', '2024-09-06', '第3周', '星期五', '第四节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES637', '2024-09-06', '第3周', '星期五', '第五节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES638', '2024-09-06', '第3周', '星期五', '第六节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES639', '2024-09-06', '第3周', '星期五', '第七节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES640', '2024-09-06', '第3周', '星期五', '第八节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES641', '2024-09-09', '第4周', '星期一', '第一节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES642', '2024-09-09', '第4周', '星期一', '第二节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES643', '2024-09-09', '第4周', '星期一', '第三节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES644', '2024-09-09', '第4周', '星期一', '第四节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES645', '2024-09-09', '第4周', '星期一', '第五节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES646', '2024-09-09', '第4周', '星期一', '第六节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES647', '2024-09-09', '第4周', '星期一', '第七节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES648', '2024-09-09', '第4周', '星期一', '第八节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES649', '2024-09-10', '第4周', '星期二', '第一节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES650', '2024-09-10', '第4周', '星期二', '第二节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES651', '2024-09-10', '第4周', '星期二', '第三节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES652', '2024-09-10', '第4周', '星期二', '第四节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES653', '2024-09-10', '第4周', '星期二', '第五节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES654', '2024-09-10', '第4周', '星期二', '第六节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES655', '2024-09-10', '第4周', '星期二', '第七节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES656', '2024-09-10', '第4周', '星期二', '第八节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES657', '2024-09-11', '第4周', '星期三', '第一节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES658', '2024-09-11', '第4周', '星期三', '第二节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES659', '2024-09-11', '第4周', '星期三', '第三节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES660', '2024-09-11', '第4周', '星期三', '第四节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES661', '2024-09-11', '第4周', '星期三', '第五节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES662', '2024-09-11', '第4周', '星期三', '第六节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES663', '2024-09-11', '第4周', '星期三', '第七节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES664', '2024-09-11', '第4周', '星期三', '第八节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES665', '2024-09-12', '第4周', '星期四', '第一节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES666', '2024-09-12', '第4周', '星期四', '第二节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES667', '2024-09-12', '第4周', '星期四', '第三节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES668', '2024-09-12', '第4周', '星期四', '第四节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES669', '2024-09-12', '第4周', '星期四', '第五节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES670', '2024-09-12', '第4周', '星期四', '第六节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES671', '2024-09-12', '第4周', '星期四', '第七节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES672', '2024-09-12', '第4周', '星期四', '第八节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES673', '2024-09-13', '第4周', '星期五', '第一节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES674', '2024-09-13', '第4周', '星期五', '第二节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES675', '2024-09-13', '第4周', '星期五', '第三节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES676', '2024-09-13', '第4周', '星期五', '第四节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES677', '2024-09-13', '第4周', '星期五', '第五节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES678', '2024-09-13', '第4周', '星期五', '第六节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES679', '2024-09-13', '第4周', '星期五', '第七节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES680', '2024-09-13', '第4周', '星期五', '第八节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES681', '2024-09-16', '第5周', '星期一', '第一节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES682', '2024-09-16', '第5周', '星期一', '第二节', '空闲', 'B1-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES683', '2024-09-16', '第5周', '星期一', '第三节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES684', '2024-09-16', '第5周', '星期一', '第四节', '空闲', 'B1-202', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES685', '2024-09-16', '第5周', '星期一', '第五节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES686', '2024-09-16', '第5周', '星期一', '第六节', '空闲', 'B2-301', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES687', '2024-09-16', '第5周', '星期一', '第七节', '空闲', 'B3-105', NULL);
-INSERT INTO `classroom_resource` VALUES ('RES688', '2024-09-16', '第5周', '星期一', '第八节', '空闲', 'B3-105', NULL);
+INSERT INTO `classroom_resource` VALUES ('res001', '2025-08-01', '第1周', '星期一', '1节', '已预订', 'b001-101', 'apply001');
+INSERT INTO `classroom_resource` VALUES ('res002', '2025-08-01', '第1周', '星期一', '2节', '已预订', 'b001-101', 'apply001');
+INSERT INTO `classroom_resource` VALUES ('res003', '2025-08-01', '第1周', '星期一', '3节', '空闲', 'b001-101', NULL);
+INSERT INTO `classroom_resource` VALUES ('res004', '2025-08-01', '第1周', '星期一', '4节', '空闲', 'b001-101', NULL);
+INSERT INTO `classroom_resource` VALUES ('res005', '2025-08-02', '第1周', '星期二', '5节', '已预订', 'b002-301', 'apply002');
+INSERT INTO `classroom_resource` VALUES ('res006', '2025-08-02', '第1周', '星期二', '6节', '已预订', 'b002-301', 'apply002');
+INSERT INTO `classroom_resource` VALUES ('res007', '2025-08-02', '第1周', '星期二', '7节', '空闲', 'b002-301', NULL);
+INSERT INTO `classroom_resource` VALUES ('res008', '2025-08-03', '第1周', '星期三', '1节', '空闲', 'b003-102', NULL);
+INSERT INTO `classroom_resource` VALUES ('res009', '2025-08-03', '第1周', '星期三', '2节', '空闲', 'b003-102', NULL);
+INSERT INTO `classroom_resource` VALUES ('res010', '2025-08-03', '第1周', '星期三', '3节', '空闲', 'b003-102', NULL);
+INSERT INTO `classroom_resource` VALUES ('res011', '2025-08-04', '第1周', '星期四', '8节', '空闲', 'b001-201', NULL);
+INSERT INTO `classroom_resource` VALUES ('res012', '2025-08-04', '第1周', '星期四', '9节', '空闲', 'b001-201', NULL);
+INSERT INTO `classroom_resource` VALUES ('res013', '2025-08-04', '第1周', '星期四', '10节', '空闲', 'b001-201', NULL);
+INSERT INTO `classroom_resource` VALUES ('res014', '2025-08-05', '第1周', '星期五', '1节', '空闲', 'b001-103', NULL);
+INSERT INTO `classroom_resource` VALUES ('res015', '2025-08-05', '第1周', '星期五', '2节', '空闲', 'b001-103', NULL);
 
 -- ----------------------------
 -- Table structure for college
@@ -229,15 +160,36 @@ CREATE TABLE `college`  (
   `college_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '学院编号',
   `college_name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '学院名称',
   PRIMARY KEY (`college_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of college
 -- ----------------------------
-INSERT INTO `college` VALUES ('JSJ', '计算机学院');
-INSERT INTO `college` VALUES ('SX', '数学学院');
-INSERT INTO `college` VALUES ('WX', '文学院');
-INSERT INTO `college` VALUES ('YY', '外国语学院');
+INSERT INTO `college` VALUES ('col001', '计算机科学与技术学院');
+INSERT INTO `college` VALUES ('col002', '电子信息工程学院');
+INSERT INTO `college` VALUES ('col003', '机械工程学院');
+
+-- ----------------------------
+-- Table structure for login
+-- ----------------------------
+DROP TABLE IF EXISTS `login`;
+CREATE TABLE `login`  (
+  `user_account` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '用户的账号',
+  `login_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '登录日志编号',
+  `login_time` datetime NULL DEFAULT NULL COMMENT '登录时间',
+  PRIMARY KEY (`login_id` DESC) USING BTREE,
+  INDEX `user_id_1`(`user_account` ASC) USING BTREE,
+  CONSTRAINT `user_id_1` FOREIGN KEY (`user_account`) REFERENCES `users` (`user_account`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of login
+-- ----------------------------
+INSERT INTO `login` VALUES ('user004', 'log005', '2025-07-31 11:05:44');
+INSERT INTO `login` VALUES ('user003', 'log004', '2025-07-31 10:15:33');
+INSERT INTO `login` VALUES ('user001', 'log003', '2025-07-31 13:20:18');
+INSERT INTO `login` VALUES ('user002', 'log002', '2025-07-31 09:45:22');
+INSERT INTO `login` VALUES ('user001', 'log001', '2025-07-31 08:30:15');
 
 -- ----------------------------
 -- Table structure for super_admin
@@ -247,13 +199,13 @@ CREATE TABLE `super_admin`  (
   `account` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '超级管理员账号',
   `password` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '超级管理员密码',
   PRIMARY KEY (`account`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of super_admin
 -- ----------------------------
-INSERT INTO `super_admin` VALUES ('root', 'root456');
-INSERT INTO `super_admin` VALUES ('superadmin', 'admin123');
+INSERT INTO `super_admin` VALUES ('admin', 'admin123');
+INSERT INTO `super_admin` VALUES ('sysadmin', 'super@pass');
 
 -- ----------------------------
 -- Table structure for teach_secretary
@@ -268,14 +220,14 @@ CREATE TABLE `teach_secretary`  (
   PRIMARY KEY (`sec_account`) USING BTREE,
   INDEX `college_id`(`college_id` ASC) USING BTREE,
   CONSTRAINT `teach_secretary_ibfk_1` FOREIGN KEY (`college_id`) REFERENCES `college` (`college_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of teach_secretary
 -- ----------------------------
-INSERT INTO `teach_secretary` VALUES ('sec_jsj', 'sec123', '张三', '020-88881111', 'JSJ');
-INSERT INTO `teach_secretary` VALUES ('sec_sx', 'sec789', '王五', '020-88883333', 'SX');
-INSERT INTO `teach_secretary` VALUES ('sec_wx', 'sec456', '李四', '020-88882222', 'WX');
+INSERT INTO `teach_secretary` VALUES ('sec001', 'pass123', '张教秘', '0510-12345678', 'col001');
+INSERT INTO `teach_secretary` VALUES ('sec002', 'pass456', '李教秘', '0510-87654321', 'col002');
+INSERT INTO `teach_secretary` VALUES ('sec003', 'pass789', '王教秘', '0510-11223344', 'col003');
 
 -- ----------------------------
 -- Table structure for users
@@ -290,15 +242,15 @@ CREATE TABLE `users`  (
   PRIMARY KEY (`user_account`) USING BTREE,
   INDEX `college_id`(`college_id` ASC) USING BTREE,
   CONSTRAINT `users_ibfk_1` FOREIGN KEY (`college_id`) REFERENCES `college` (`college_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('2023001', 'user123', '赵六', '13500135001', 'JSJ');
-INSERT INTO `users` VALUES ('2023002', 'user456', '孙七', '13600136002', 'WX');
-INSERT INTO `users` VALUES ('2023003', 'user789', '周八', '13400134003', 'SX');
-INSERT INTO `users` VALUES ('2023004', 'user012', '吴九', '13300133004', 'JSJ');
+INSERT INTO `users` VALUES ('user001', 'userpass1', '王老师', '13800138001', 'col001');
+INSERT INTO `users` VALUES ('user002', 'userpass2', '刘老师', '13800138002', 'col002');
+INSERT INTO `users` VALUES ('user003', 'userpass3', '陈老师', '13800138003', 'col003');
+INSERT INTO `users` VALUES ('user004', 'userpass4', '赵老师', '13800138004', 'col001');
 
 -- ----------------------------
 -- View structure for unapply_applications
