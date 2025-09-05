@@ -11,7 +11,7 @@
  Target Server Version : 80026 (8.0.26)
  File Encoding         : 65001
 
- Date: 19/08/2025 13:57:06
+ Date: 05/09/2025 10:35:13
 */
 
 SET NAMES utf8mb4;
@@ -36,13 +36,14 @@ CREATE TABLE `apply_info`  (
   INDEX `sec_account`(`sec_account` ASC) USING BTREE,
   CONSTRAINT `apply_info_ibfk_1` FOREIGN KEY (`user_account`) REFERENCES `users` (`user_account`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `apply_info_ibfk_2` FOREIGN KEY (`sec_account`) REFERENCES `teach_secretary` (`sec_account`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `chk_apply_status` CHECK (`apply_status` in (_utf8mb4'待审核',_utf8mb4'已批准',_utf8mb4'已拒绝'))
+  CONSTRAINT `chk_apply_status` CHECK (`apply_status` in (_utf8mb4'待审核',_utf8mb4'已通过',_utf8mb4'已驳回'))
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of apply_info
 -- ----------------------------
-INSERT INTO `apply_info` VALUES ('1957664107012427776', 50, '举办班会', '2025-08-19 12:41:09', '待审核', '', 'user001', 'sec000', 0);
+INSERT INTO `apply_info` VALUES ('12321312', 24, '撒啊', '2025-08-19 16:52:59', '待审核', NULL, 'user002', 'sec002', 0);
+INSERT INTO `apply_info` VALUES ('1284783214', 50, '举行班会', '2025-08-19 16:43:18', '待审核', NULL, 'user001', 'sec001', 0);
 
 -- ----------------------------
 -- Table structure for building
@@ -280,7 +281,7 @@ INSERT INTO `classroom_resource` VALUES ('176', '2025-10-07 14:00:00', '第五�
 INSERT INTO `classroom_resource` VALUES ('177', '2025-10-07 15:00:00', '第五周', '星期一', '第六节', '空闲', 'b007-103', NULL);
 INSERT INTO `classroom_resource` VALUES ('178', '2025-10-07 16:10:00', '第五周', '星期一', '第七节', '空闲', 'b007-104', NULL);
 INSERT INTO `classroom_resource` VALUES ('179', '2025-10-07 19:00:00', '第五周', '星期一', '第八节', '空闲', 'b007-201', NULL);
-INSERT INTO `classroom_resource` VALUES ('18', '2025-09-10 20:00:00', '第一周', '星期三', '第九节', '已预约', 'b001-102', NULL);
+INSERT INTO `classroom_resource` VALUES ('18', '2025-09-10 20:00:00', '第一周', '星期三', '第九节', '空闲', 'b001-102', NULL);
 INSERT INTO `classroom_resource` VALUES ('180', '2025-10-07 20:00:00', '第五周', '星期一', '第九节', '空闲', 'b007-202', NULL);
 INSERT INTO `classroom_resource` VALUES ('181', '2025-10-08 08:00:00', '第五周', '星期二', '第一节', '空闲', 'b007-203', NULL);
 INSERT INTO `classroom_resource` VALUES ('182', '2025-10-08 09:00:00', '第五周', '星期二', '第二节', '空闲', 'b007-204', NULL);
@@ -311,10 +312,10 @@ INSERT INTO `classroom_resource` VALUES ('20250909b0011011', '2025-09-09 00:00:0
 INSERT INTO `classroom_resource` VALUES ('20250909b0011012', '2025-09-09 00:00:00', '第一周', '星期三', '第二节', '空闲', 'b001-101', NULL);
 INSERT INTO `classroom_resource` VALUES ('20250909b0011013', '2025-09-09 00:00:00', '第一周', '星期三', '第三节', '空闲', 'b001-101', NULL);
 INSERT INTO `classroom_resource` VALUES ('20250909b0011014', '2025-09-09 00:00:00', '第一周', '星期三', '第四节', '空闲', 'b001-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('20250909b0011015', '2025-09-09 00:00:00', '第一周', '星期三', '第五节', '空闲', 'b001-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('20250909b0011016', '2025-09-09 00:00:00', '第一周', '星期三', '第六节', '空闲', 'b001-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('20250909b0011017', '2025-09-09 00:00:00', '第一周', '星期三', '第七节', '空闲', 'b001-101', NULL);
-INSERT INTO `classroom_resource` VALUES ('20250909b0011018', '2025-09-09 00:00:00', '第一周', '星期三', '第八节', '空闲', 'b001-101', NULL);
+INSERT INTO `classroom_resource` VALUES ('20250909b0011015', '2025-09-09 00:00:00', '第一周', '星期三', '第五节', '已预约', 'b001-101', '12321312');
+INSERT INTO `classroom_resource` VALUES ('20250909b0011016', '2025-09-09 00:00:00', '第一周', '星期三', '第六节', '已预约', 'b001-101', '12321312');
+INSERT INTO `classroom_resource` VALUES ('20250909b0011017', '2025-09-09 00:00:00', '第一周', '星期三', '第七节', '已预约', 'b001-101', '1284783214');
+INSERT INTO `classroom_resource` VALUES ('20250909b0011018', '2025-09-09 00:00:00', '第一周', '星期三', '第八节', '已预约', 'b001-101', '1284783214');
 INSERT INTO `classroom_resource` VALUES ('20250909b0011019', '2025-09-09 00:00:00', '第一周', '星期三', '第九节', '空闲', 'b001-101', NULL);
 INSERT INTO `classroom_resource` VALUES ('20250909b0011021', '2025-09-09 00:00:00', '第一周', '星期三', '第一节', '空闲', 'b001-102', NULL);
 INSERT INTO `classroom_resource` VALUES ('20250909b0011022', '2025-09-09 00:00:00', '第一周', '星期三', '第二节', '空闲', 'b001-102', NULL);
@@ -456,7 +457,7 @@ INSERT INTO `classroom_resource` VALUES ('296', '2025-10-20 19:00:00', '第六�
 INSERT INTO `classroom_resource` VALUES ('297', '2025-10-20 20:00:00', '第六周', '星期日', '第九节', '空闲', 'b001-103', NULL);
 INSERT INTO `classroom_resource` VALUES ('298', '2025-10-21 08:00:00', '第七周', '星期一', '第一节', '空闲', 'b001-104', NULL);
 INSERT INTO `classroom_resource` VALUES ('299', '2025-10-21 09:00:00', '第七周', '星期一', '第二节', '空闲', 'b001-201', NULL);
-INSERT INTO `classroom_resource` VALUES ('3', '2025-09-09 10:10:00', '第一周', '星期二', '第三节', '已预约', 'b001-103', '1957664107012427776');
+INSERT INTO `classroom_resource` VALUES ('3', '2025-09-09 10:10:00', '第一周', '星期二', '第三节', '空闲', 'b001-103', NULL);
 INSERT INTO `classroom_resource` VALUES ('30', '2025-09-12 10:10:00', '第一周', '星期五', '第三节', '空闲', 'b002-304', NULL);
 INSERT INTO `classroom_resource` VALUES ('300', '2025-10-21 10:10:00', '第七周', '星期一', '第三节', '空闲', 'b001-202', NULL);
 INSERT INTO `classroom_resource` VALUES ('301', '2025-10-21 11:10:00', '第七周', '星期一', '第四节', '空闲', 'b001-203', NULL);
@@ -474,7 +475,7 @@ INSERT INTO `classroom_resource` VALUES ('36', '2025-09-12 20:00:00', '第一周
 INSERT INTO `classroom_resource` VALUES ('37', '2025-09-16 08:00:00', '第二周', '星期一', '第一节', '空闲', 'b003-101', NULL);
 INSERT INTO `classroom_resource` VALUES ('38', '2025-09-16 09:00:00', '第二周', '星期一', '第二节', '空闲', 'b003-102', NULL);
 INSERT INTO `classroom_resource` VALUES ('39', '2025-09-16 10:10:00', '第二周', '星期一', '第三节', '空闲', 'b003-103', NULL);
-INSERT INTO `classroom_resource` VALUES ('4', '2025-09-09 11:10:00', '第一周', '星期二', '第四节', '已预约', 'b001-104', '1957664107012427776');
+INSERT INTO `classroom_resource` VALUES ('4', '2025-09-09 11:10:00', '第一周', '星期二', '第四节', '空闲', 'b001-104', NULL);
 INSERT INTO `classroom_resource` VALUES ('40', '2025-09-16 11:10:00', '第二周', '星期一', '第四节', '空闲', 'b003-104', NULL);
 INSERT INTO `classroom_resource` VALUES ('41', '2025-09-16 14:00:00', '第二周', '星期一', '第五节', '空闲', 'b003-201', NULL);
 INSERT INTO `classroom_resource` VALUES ('42', '2025-09-16 15:00:00', '第二周', '星期一', '第六节', '空闲', 'b003-202', NULL);
@@ -578,43 +579,111 @@ CREATE TABLE `login`  (
 -- Records of login
 -- ----------------------------
 INSERT INTO `login` VALUES ('logf9bbd766da', 'user001', '2025-08-12 14:38:31');
+INSERT INTO `login` VALUES ('logf8ae983dd1', 'admin', '2025-08-21 03:09:44');
 INSERT INTO `login` VALUES ('logf63d30a963', 'user001', '2025-08-12 13:23:56');
+INSERT INTO `login` VALUES ('logf5581f71e2', 'admin', '2025-09-04 21:32:24');
 INSERT INTO `login` VALUES ('logf36b7e8286', 'user001', '2025-08-12 13:19:48');
 INSERT INTO `login` VALUES ('logf28cd6628b', 'user001', '2025-08-12 13:01:49');
+INSERT INTO `login` VALUES ('logefc2dc84b1', 'admin', '2025-08-21 03:22:17');
+INSERT INTO `login` VALUES ('logee4871fd15', 'admin', '2025-08-20 12:52:07');
+INSERT INTO `login` VALUES ('loge837838863', 'admin', '2025-08-21 03:16:23');
+INSERT INTO `login` VALUES ('loge7cbee8da3', 'admin', '2025-08-20 12:53:17');
+INSERT INTO `login` VALUES ('loge6e1d90499', 'admin', '2025-09-05 09:51:09');
 INSERT INTO `login` VALUES ('loge692dc55b1', 'user001', '2025-08-12 13:20:33');
 INSERT INTO `login` VALUES ('loge49c1beb54', 'user001', '2025-08-09 23:48:46');
+INSERT INTO `login` VALUES ('logdeb06f22ec', 'user001', '2025-08-20 16:28:47');
+INSERT INTO `login` VALUES ('logdbc68425ed', 'user001', '2025-08-20 21:16:58');
+INSERT INTO `login` VALUES ('logd5ae07718e', 'user001', '2025-08-20 16:23:39');
 INSERT INTO `login` VALUES ('logd575bdaf1f', 'user001', '2025-08-12 13:22:39');
+INSERT INTO `login` VALUES ('logd379df9677', 'user002', '2025-08-29 22:00:56');
 INSERT INTO `login` VALUES ('logd3042a11c2', 'user001', '2025-08-12 13:37:32');
+INSERT INTO `login` VALUES ('logd01ac8309e', 'user001', '2025-08-21 16:19:19');
+INSERT INTO `login` VALUES ('logcec3ad4996', 'admin', '2025-09-05 09:49:33');
+INSERT INTO `login` VALUES ('logcad35f9d84', 'admin', '2025-09-04 21:12:34');
 INSERT INTO `login` VALUES ('logca10cd2af9', 'user001', '2025-08-09 23:48:10');
+INSERT INTO `login` VALUES ('logc7f0b483d6', 'user001', '2025-08-20 21:00:00');
 INSERT INTO `login` VALUES ('logc7c75c2099', 'user001', '2025-08-12 13:02:10');
+INSERT INTO `login` VALUES ('logc3848b601c', 'admin', '2025-08-20 12:40:24');
+INSERT INTO `login` VALUES ('logc364617f12', 'user001', '2025-08-20 15:55:27');
 INSERT INTO `login` VALUES ('logc1c811cee2', 'user001', '2025-08-12 14:15:19');
+INSERT INTO `login` VALUES ('logc15772a2c9', 'user001', '2025-08-21 17:08:16');
 INSERT INTO `login` VALUES ('logc0d0346a02', 'user001', '2025-08-12 13:20:06');
 INSERT INTO `login` VALUES ('logbd91697696', 'user001', '2025-08-12 13:18:01');
+INSERT INTO `login` VALUES ('logbc67e3738d', 'admin', '2025-08-21 03:33:01');
 INSERT INTO `login` VALUES ('logbb2f59af3c', 'user001', '2025-08-12 14:05:40');
+INSERT INTO `login` VALUES ('logbb1741849e', 'user001', '2025-08-20 21:15:34');
 INSERT INTO `login` VALUES ('logbafbe38351', 'user001', '2025-08-14 20:37:13');
 INSERT INTO `login` VALUES ('logb9f34de658', 'user001', '2025-08-12 12:56:24');
+INSERT INTO `login` VALUES ('logaefa08b441', 'admin', '2025-08-20 12:47:26');
 INSERT INTO `login` VALUES ('logae0b6418b0', 'user001', '2025-08-12 13:27:05');
+INSERT INTO `login` VALUES ('logab2f8502c6', 'user001', '2025-08-20 16:29:32');
 INSERT INTO `login` VALUES ('loga8fb29bd8b', 'user001', '2025-08-12 13:26:39');
+INSERT INTO `login` VALUES ('loga6c9858efd', 'admin', '2025-08-20 12:54:37');
+INSERT INTO `login` VALUES ('loga14f2429ae', 'user001', '2025-08-21 16:57:59');
+INSERT INTO `login` VALUES ('log9f9071e9f5', 'admin', '2025-08-20 12:16:44');
+INSERT INTO `login` VALUES ('log9f5df23e2f', 'user001', '2025-08-20 21:06:26');
+INSERT INTO `login` VALUES ('log9aeeabbe9a', 'admin', '2025-08-21 03:17:19');
+INSERT INTO `login` VALUES ('log987d085db9', 'admin', '2025-09-04 21:01:25');
+INSERT INTO `login` VALUES ('log98467e6341', 'sec001', '2025-08-29 22:02:35');
+INSERT INTO `login` VALUES ('log949983d6b5', 'user001', '2025-08-20 16:27:00');
+INSERT INTO `login` VALUES ('log92b4b5dc5d', 'admin', '2025-09-05 10:10:47');
 INSERT INTO `login` VALUES ('log8fd515fa05', 'user001', '2025-08-09 23:21:59');
+INSERT INTO `login` VALUES ('log8c0e112611', 'user001', '2025-08-21 16:47:46');
+INSERT INTO `login` VALUES ('log8a21d270ac', 'admin', '2025-09-04 20:51:48');
+INSERT INTO `login` VALUES ('log7ea3cf2ab3', 'admin', '2025-08-20 12:49:13');
 INSERT INTO `login` VALUES ('log7e75af067d', 'user001', '2025-08-09 23:20:42');
+INSERT INTO `login` VALUES ('log7cd52b2963', 'admin', '2025-09-04 21:24:50');
+INSERT INTO `login` VALUES ('log7c0d61b216', 'admin', '2025-09-04 21:34:10');
+INSERT INTO `login` VALUES ('log77ee822568', 'user001', '2025-08-20 16:18:42');
 INSERT INTO `login` VALUES ('log73788c9b35', 'user001', '2025-08-12 14:26:34');
 INSERT INTO `login` VALUES ('log7349efcb8a', 'user001', '2025-08-12 13:41:43');
 INSERT INTO `login` VALUES ('log725f506a43', 'user001', '2025-08-09 23:40:33');
+INSERT INTO `login` VALUES ('log6fba22ff0a', 'user001', '2025-08-20 16:05:44');
+INSERT INTO `login` VALUES ('log6db759ec80', 'admin', '2025-08-20 12:57:13');
 INSERT INTO `login` VALUES ('log6a0df6442c', 'user001', '2025-08-12 12:56:37');
+INSERT INTO `login` VALUES ('log66411d3317', 'admin', '2025-08-20 12:32:22');
+INSERT INTO `login` VALUES ('log62aeb8ea7a', 'sec001', '2025-08-29 22:22:14');
 INSERT INTO `login` VALUES ('log62187b1612', 'admin', '2025-08-19 12:33:37');
 INSERT INTO `login` VALUES ('log5fb0f56a54', 'user001', '2025-08-12 13:52:03');
+INSERT INTO `login` VALUES ('log5f291a4c0c', 'sec001', '2025-08-29 23:28:05');
+INSERT INTO `login` VALUES ('log5f03234060', 'admin', '2025-08-20 11:45:10');
+INSERT INTO `login` VALUES ('log5ef24e1ce6', 'admin', '2025-08-21 03:03:58');
+INSERT INTO `login` VALUES ('log5d8043a92f', 'user001', '2025-08-20 21:08:57');
 INSERT INTO `login` VALUES ('log5d3dcaf799', 'user001', '2025-08-12 13:55:50');
 INSERT INTO `login` VALUES ('log5b9029203b', 'user001', '2025-08-09 23:37:36');
+INSERT INTO `login` VALUES ('log50f6e7dd3d', 'admin', '2025-08-20 12:46:05');
 INSERT INTO `login` VALUES ('log4f876e5f13', 'user001', '2025-08-12 12:58:08');
 INSERT INTO `login` VALUES ('log4e5701ff53', 'user001', '2025-08-09 23:48:53');
+INSERT INTO `login` VALUES ('log4a506247ba', 'user001', '2025-08-20 15:30:23');
+INSERT INTO `login` VALUES ('log48b4e2813d', 'user001', '2025-08-20 16:21:18');
+INSERT INTO `login` VALUES ('log461f13283b', 'user001', '2025-08-20 15:52:01');
+INSERT INTO `login` VALUES ('log455d727ada', 'user001', '2025-08-21 16:40:07');
+INSERT INTO `login` VALUES ('log4122804e33', 'sec001', '2025-08-29 22:13:24');
+INSERT INTO `login` VALUES ('log3ed6844d94', 'user001', '2025-08-21 17:26:23');
+INSERT INTO `login` VALUES ('log3d3faf0078', 'user001', '2025-09-04 19:44:40');
+INSERT INTO `login` VALUES ('log2fddd7df20', 'user001', '2025-08-20 21:12:07');
+INSERT INTO `login` VALUES ('log2f45d06429', 'admin', '2025-08-20 11:24:08');
+INSERT INTO `login` VALUES ('log2f42010f23', 'admin', '2025-09-05 10:14:34');
+INSERT INTO `login` VALUES ('log2deabfdd2d', 'admin', '2025-09-04 21:27:48');
+INSERT INTO `login` VALUES ('log2d5875ab05', 'user001', '2025-08-21 16:51:10');
 INSERT INTO `login` VALUES ('log2a0d914025', 'user001', '2025-08-12 14:43:23');
+INSERT INTO `login` VALUES ('log299ded38e5', 'admin', '2025-08-21 03:31:09');
+INSERT INTO `login` VALUES ('log27c9f87b87', 'user001', '2025-08-21 17:09:59');
+INSERT INTO `login` VALUES ('log261a7772b4', 'admin', '2025-08-20 12:58:25');
 INSERT INTO `login` VALUES ('log22dbfeaa2b', 'user001', '2025-08-09 23:34:10');
+INSERT INTO `login` VALUES ('log22c061fd30', 'user001', '2025-08-21 17:06:56');
+INSERT INTO `login` VALUES ('log1edc635f98', 'user001', '2025-08-21 16:26:05');
+INSERT INTO `login` VALUES ('log1ce85c59b9', 'admin', '2025-09-04 21:07:21');
 INSERT INTO `login` VALUES ('log1c6ffaf1b9', 'user001', '2025-08-12 13:07:53');
 INSERT INTO `login` VALUES ('log140f9f735b', 'user001', '2025-08-12 14:25:51');
+INSERT INTO `login` VALUES ('log13ce6d0069', 'admin', '2025-09-04 21:49:54');
 INSERT INTO `login` VALUES ('log13c4ee6299', 'user001', '2025-08-09 20:25:32');
+INSERT INTO `login` VALUES ('log0fd7c29ac3', 'admin', '2025-08-20 12:03:14');
 INSERT INTO `login` VALUES ('log0ed15fb5b0', 'user001', '2025-08-09 23:22:41');
 INSERT INTO `login` VALUES ('log0db785b535', 'user001', '2025-08-12 12:53:54');
 INSERT INTO `login` VALUES ('log0d45e62dbf', 'user001', '2025-08-09 23:29:55');
+INSERT INTO `login` VALUES ('log0a1c6293d6', 'admin', '2025-09-04 20:34:17');
+INSERT INTO `login` VALUES ('log058f9ddb3c', 'admin', '2025-09-04 21:29:29');
 INSERT INTO `login` VALUES ('log005', 'user004', '2025-07-31 11:05:44');
 INSERT INTO `login` VALUES ('log004', 'user003', '2025-07-31 10:15:33');
 INSERT INTO `login` VALUES ('log003', 'user001', '2025-07-31 13:20:18');
@@ -682,7 +751,7 @@ CREATE TABLE `users`  (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('user001', '666', '邓发成', '666', 'col001');
+INSERT INTO `users` VALUES ('user001', '666', '邓发成', '88888', 'col001');
 INSERT INTO `users` VALUES ('user002', 'userpass2', '王美淇', '13800138002', 'col002');
 INSERT INTO `users` VALUES ('user003', 'userpass3', '冯诺诗', '13800138003', 'col003');
 INSERT INTO `users` VALUES ('user004', 'userpass4', '李佳玲', '13800138004', 'col001');
