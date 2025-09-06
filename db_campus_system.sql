@@ -11,7 +11,7 @@
  Target Server Version : 80026 (8.0.26)
  File Encoding         : 65001
 
- Date: 05/09/2025 10:35:13
+ Date: 06/09/2025 17:50:23
 */
 
 SET NAMES utf8mb4;
@@ -31,6 +31,7 @@ CREATE TABLE `apply_info`  (
   `user_account` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '预约用户账号',
   `sec_account` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '教秘账号',
   `user_cancel` int NULL DEFAULT 0 COMMENT '用户是否取消',
+  `processing_time` datetime NULL DEFAULT NULL COMMENT '处理时间',
   PRIMARY KEY (`apply_id`) USING BTREE,
   INDEX `user_account`(`user_account` ASC) USING BTREE,
   INDEX `sec_account`(`sec_account` ASC) USING BTREE,
@@ -42,8 +43,8 @@ CREATE TABLE `apply_info`  (
 -- ----------------------------
 -- Records of apply_info
 -- ----------------------------
-INSERT INTO `apply_info` VALUES ('12321312', 24, '撒啊', '2025-08-19 16:52:59', '待审核', NULL, 'user002', 'sec002', 0);
-INSERT INTO `apply_info` VALUES ('1284783214', 50, '举行班会', '2025-08-19 16:43:18', '待审核', NULL, 'user001', 'sec001', 0);
+INSERT INTO `apply_info` VALUES ('12321312', 24, '撒啊', '2025-08-19 16:52:59', '待审核', NULL, 'user002', 'sec002', 0, '2025-09-02 17:48:33');
+INSERT INTO `apply_info` VALUES ('1284783214', 50, '举行班会', '2025-08-19 16:43:18', '待审核', NULL, 'user001', 'sec001', 0, '2025-09-02 17:48:37');
 
 -- ----------------------------
 -- Table structure for building
@@ -584,6 +585,7 @@ INSERT INTO `login` VALUES ('logf63d30a963', 'user001', '2025-08-12 13:23:56');
 INSERT INTO `login` VALUES ('logf5581f71e2', 'admin', '2025-09-04 21:32:24');
 INSERT INTO `login` VALUES ('logf36b7e8286', 'user001', '2025-08-12 13:19:48');
 INSERT INTO `login` VALUES ('logf28cd6628b', 'user001', '2025-08-12 13:01:49');
+INSERT INTO `login` VALUES ('logf073a43f08', 'admin', '2025-09-05 10:40:58');
 INSERT INTO `login` VALUES ('logefc2dc84b1', 'admin', '2025-08-21 03:22:17');
 INSERT INTO `login` VALUES ('logee4871fd15', 'admin', '2025-08-20 12:52:07');
 INSERT INTO `login` VALUES ('loge837838863', 'admin', '2025-08-21 03:16:23');
@@ -599,6 +601,7 @@ INSERT INTO `login` VALUES ('logd379df9677', 'user002', '2025-08-29 22:00:56');
 INSERT INTO `login` VALUES ('logd3042a11c2', 'user001', '2025-08-12 13:37:32');
 INSERT INTO `login` VALUES ('logd01ac8309e', 'user001', '2025-08-21 16:19:19');
 INSERT INTO `login` VALUES ('logcec3ad4996', 'admin', '2025-09-05 09:49:33');
+INSERT INTO `login` VALUES ('logcc25fae221', 'sec001', '2025-09-06 17:24:51');
 INSERT INTO `login` VALUES ('logcad35f9d84', 'admin', '2025-09-04 21:12:34');
 INSERT INTO `login` VALUES ('logca10cd2af9', 'user001', '2025-08-09 23:48:10');
 INSERT INTO `login` VALUES ('logc7f0b483d6', 'user001', '2025-08-20 21:00:00');
